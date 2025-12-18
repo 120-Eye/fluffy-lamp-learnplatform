@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enquiry System | v3.0 Ultimate</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="pref-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2><i class="fa-solid fa-sliders"></i> Customize Your Feed</h2>
+            <p style="color:var(--text-muted)">Select topics to personalize your dashboard videos.</p>
+            <div class="tag-grid" id="pref-choices">
+                </div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="toggleModal(false)">Close</button>
+                <button class="btn btn-primary" onclick="savePreferences()">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div id="assign-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2><i class="fa-solid fa-calendar-check"></i> Add Assignment</h2>
+            <input type="text" id="assign-title" class="search-input" style="border-radius:8px; padding:10px; margin-bottom:10px; border:1px solid var(--border);" placeholder="Assignment Title (e.g. AI Project)">
+            <input type="date" id="assign-date" class="search-input" style="border-radius:8px; padding:10px; border:1px solid var(--border);" placeholder="Due Date">
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn btn-outline" onclick="toggleAssignModal(false)">Cancel</button>
+                <button class="btn btn-primary" onclick="saveAssignment()">Add Reminder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="video-player-modal" class="modal-overlay hidden" onclick="closeVideoPlayer()">
+        <div class="video-modal-content" onclick="event.stopPropagation()">
+            <span class="close-video-btn" onclick="closeVideoPlayer()">&times;</span>
+            <iframe id="yt-player-frame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <header>
+        <div class="brand"><i class="fa-solid fa-graduation-cap"></i> SES <span style="font-size:0.8rem; opacity:0.7; font-weight:400; color:var(--text-muted)">v3.0</span></div>
+        <nav class="nav-links">
+            <button class="nav-item active" onclick="switchView('dash')">Dashboard</button>
+            <button class="nav-item" onclick="switchView('search')">Search</button>
+            <button class="nav-item" onclick="switchView('favorites')">Favorites <span id="fav-badge" style="background:var(--accent); color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:5px;">0</span></button>
+            <button class="nav-item" onclick="switchView('admin')">Admin</button>
+        </nav>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <button class="btn-outline" style="border:none; font-size:1.2rem;" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
+            <div class="user-profile" onclick="switchView('profile')">
+            <div style="text-align: right; line-height: 1.2;">
+                <div style="font-weight: 700; font-size: 0.9rem;">Student User</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Computer Science</div>
+            </div>
+            <div class="avatar">SU</div>
+        </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div id="view-dash">
+            <div class="hero-section">
+                <div class="hero-card">
+                    <i class="fa-solid fa-microchip hero-bg-icon"></i>
+                    <h1 class="hero-title">Welcome Back!</h1>
+                    <p class="hero-subtitle">We've curated these videos based on your interest preferences.</p>
+                    <div id="user-prefs-display" class="pref-tags"></div>
+                    
+                    <div class="hero-stats-row">
+                        <div class="stat-item"><span class="stat-val">12</span><span class="stat-label">New Videos</span></div>
+                        <div class="stat-item"><span class="stat-val">85%</span><span class="stat-label">Profile Match</span></div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3 style="margin: 0 0 15px 0; font-size: 1rem;">Quick Actions</h3>
+                    <div class="action-btn" onclick="toggleModal(true)">
+                        <div class="action-icon"><i class="fa-solid fa-sliders"></i></div>
+                        <div><div style="font-weight: 600;">Edit Interests</div><div style="font-size: 0.8rem; color: var(--text-muted);">Customize Feed</div></div>
+                    </div>
+                    <div class="action-btn" onclick="toggleAssignModal(true)">
+                        <div class="action-icon" style="background:#fee2e2; color:var(--danger);"><i class="fa-solid fa-bell"></i></div>
+                        <div><div style="font-weight: 600;">Add Reminder</div><div style="font-size: 0.8rem; color: var(--text-muted);">Set Deadlines</div></div>
+                    </div>
+                    
+                    <h3 style="margin: 20px 0 10px 0; font-size: 1rem;">Upcoming</h3>
+                    <div id="dashboard-assignments">
+                        <!-- Assignments injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard-feed">
+                </div>
+        </div>
+
+        <div id="view-search" class="hidden">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" class="search-input" id="global-search" placeholder="Search for 'Thermodynamics', 'React Hooks', 'History of Rome'..." onkeypress="if(event.key === 'Enter') performGlobalSearch()">
+                <button class="btn btn-primary search-btn" onclick="performGlobalSearch()">Search</button>
+            </div>
+
+            <div id="search-loader" class="loader hidden"><i class="fa-solid fa-spinner fa-spin"></i></div>
+
+            <div id="search-results" class="hidden">
+                
+                <div class="row-title" style="color: #fca5a5; border-color: #ef4444;">
+                    <i class="fa-regular fa-file-pdf"></i> Study Materials & Documents
+                </div>
+                <div class="scroll-row" id="file-row">
+                    </div>
+
+                <div class="row-title" style="margin-top: 40px; color: #fcd34d; border-color: #f59e0b;">
+                    <i class="fa-brands fa-youtube"></i> Video Resources
+                </div>
+                <div class="scroll-row" id="video-row">
+                    </div>
+
+                <div class="row-title" style="margin-top: 40px; color: #93c5fd; border-color: #3b82f6;">
+                    <i class="fa-solid fa-book"></i> Academic Books & Previews
+                </div>
+                <div class="scroll-row" id="book-row">
+                    </div>
+
+            </div>
+        </div>
+
+        <div id="view-favorites" class="hidden">
+            <div class="row-title"><i class="fa-solid fa-heart" style="color:var(--danger)"></i> Your Saved Resources</div>
+            <div class="resource-grid" id="fav-grid"></div>
+        </div>
+
+        <div id="view-admin" class="hidden">
+            <div class="hero-card" style="background: linear-gradient(120deg, #0f172a, #334155);">
+                <h1 class="hero-title">Admin Console</h1>
+                <p class="hero-subtitle">Manage resources, view analytics, and approve student uploads.</p>
+            </div>
+            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+                <!-- Upload Panel -->
+                <div class="resource-card" style="padding: 30px; border: 2px dashed var(--border); justify-content: center; align-items: center; text-align: center; cursor: pointer; background: var(--bg-card);" onclick="alert('Upload Simulation: File sent to NLP Service.')">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+                    <h3>Upload Resource</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">PDF, DOCX, or MP4</p>
+                </div>
+                
+                <!-- Stats Panel -->
+                <div class="resource-card" style="padding: 20px; display:block;">
+                    <h3><i class="fa-solid fa-server"></i> System Status</h3>
+                    <div style="margin-top:15px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem;"><span>AI Model Load</span><span>45%</span></div>
+                        <div style="height: 8px; background: var(--border); border-radius: 5px; overflow: hidden;"><div style="width: 45%; height: 100%; background: var(--success);"></div></div>
+                    </div>
+                    <div style="margin-top:15px;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem;"><span>Storage Usage</span><span>72%</span></div>
+                        <div style="height: 8px; background: var(--border); border-radius: 5px; overflow: hidden;"><div style="width: 72%; height: 100%; background: var(--accent);"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="row-title">Pending Approvals</h3>
+            <table class="admin-table">
+                <thead><tr><th>Resource Name</th><th>Type</th><th>User</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody id="admin-uploads-list"></tbody>
+            </table>
+        </div>
+
+        <div id="view-profile" class="hidden">
+            <div class="hero-card" style="background: linear-gradient(120deg, #6366f1, #4338ca);">
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <div style="width:80px; height:80px; background:white; border-radius:50%; color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:bold;">SU</div>
+                    <div>
+                        <h1 style="margin:0; font-size:2rem;">Student User</h1>
+                        <p style="margin:5px 0 0 0; opacity:0.9;">Computer Science • Semester 7</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row-title">Account Settings</div>
+            <div class="resource-card" style="padding:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0; border-bottom:1px solid var(--border);">
+                    <div><strong>Dark Mode</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">Toggle application theme</span></div>
+                    <button class="btn btn-outline" onclick="toggleTheme()">Switch Theme</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0;">
+                    <div><strong>Clear Data</strong><br><span style="font-size:0.8rem; color:var(--text-muted);">Reset all local preferences and favorites</span></div>
+                    <button class="btn btn-outline" style="color:var(--danger); border-color:var(--danger);" onclick="localStorage.clear(); location.reload();">Reset App</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chatbot Widget -->
+    <div class="chat-btn" onclick="toggleChat()">
+        <i class="fa-solid fa-robot"></i>
+    </div>
+
+    <div id="chat-window" class="chat-window hidden">
+        <div class="chat-header">
+            <span><i class="fa-solid fa-robot"></i> Study Buddy</span>
+            <i class="fa-solid fa-xmark" style="cursor:pointer" onclick="toggleChat()"></i>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg msg-bot">Hello! I'm your AI study assistant. Ask me to search for topics or find documents!</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Ask something..." onkeypress="if(event.key === 'Enter') sendChat()">
+            <button class="chat-send" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+</body>
+</html>
