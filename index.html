@@ -31,6 +31,12 @@
             .search-btn { position: static; width: 100%; margin-top: 10px; }
             .chat-window { width: 94%; right: 3%; bottom: 80px; height: 55vh; }
             .modal { width: 95%; padding: 20px; }
+            
+            /* Card Scaling Fix */
+            .resource-card { min-width: 260px; }
+            
+            /* Admin Panel Mobile Fix */
+            .admin-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -170,7 +176,7 @@
                 <h1 class="hero-title">Admin Console</h1>
                 <p class="hero-subtitle">Manage resources, view analytics, and approve student uploads.</p>
             </div>
-            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            <div class="admin-grid">
                 <!-- Upload Panel -->
                 <div class="resource-card" style="padding: 30px; border: 2px dashed var(--border); justify-content: center; align-items: center; text-align: center; cursor: pointer; background: var(--bg-card);" onclick="alert('Upload Simulation: File sent to NLP Service.')">
                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
