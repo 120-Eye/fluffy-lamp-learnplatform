@@ -1,675 +1,155 @@
-/* --- 1. MOCK YOUTUBE DATABASE (For Offline/Demo Stability) --- */
-// Since we can't use a real key safely, we map keywords to REAL video IDs.
-const youtubeDB = {
-    'AI': [
-        {id: 'JMUxmLyrhSk', title: 'AI for Beginners - Google Cloud'},
-        {id: 'aircAruvnKk', title: 'Neural Networks 3Blue1Brown'},
-        {id: 'GIsg-Z_n2hQ', title: 'What is Artificial Intelligence?'}
-    ],
-    'Web Dev': [
-        {id: 'bMknfKXIFA8', title: 'React Course - Beginner to Advanced'},
-        {id: 'mU6anWqZJcc', title: 'HTML CSS Full Course'},
-        {id: 'kUMe1FH4CHE', title: 'Learn HTML in 1 hour'}
-    ],
-    'Physics': [
-        {id: 'T84d6Zz5vO0', title: 'Thermodynamics: Crash Course Physics'},
-        {id: 'ixTwQ3S-8Qk', title: 'Quantum Mechanics Explained'},
-        {id: 'bHIhgxav9LY', title: 'The Physics of Black Holes'}
-    ],
-    'Math': [
-        {id: '302eJ3TzJlg', title: 'Calculus: Derivatives 101'},
-        {id: 'QyIobTsghv4', title: 'Linear Algebra - Matrix'},
-        {id: 'vA-55wZtKrE', title: 'Statistics for Data Science'}
-    ],
-    'History': [
-        {id: 'Y3t2EivwrZ0', title: 'The Roman Empire Explained'},
-        {id: 'S4IVlptk1xI', title: 'World War 2 in 12 Minutes'}
-    ],
-    'Biology': [
-        {id: '8IlzKri08kk', title: 'Introduction to Biology - Crash Course'},
-        {id: 'ax0t_42l2P0', title: 'The Cell Song'},
-        {id: 'hS23_9yBfQ', title: 'DNA Replication 3D'}
-    ],
-    'Chemistry': [
-        {id: 'FSyAehMDpyI', title: 'Basic Chemistry Concepts'},
-        {id: 'Rd4a1X3B61w', title: 'Periodic Table Explained'},
-        {id: '0h5Jd7k_0_c', title: 'Organic Chemistry Introduction'}
-    ],
-    'Literature': [
-        {id: 'MSYw502dJNY', title: 'To Kill a Mockingbird Summary'},
-        {id: '4z7gDsZ8jnU', title: 'Shakespeare: Brief History'},
-        {id: 'S0_6g_7_0_c', title: '1984 by George Orwell Analysis'}
-    ],
-    'Economics': [
-        {id: '3ez10ADR_gM', title: 'Economics 101: Supply & Demand'},
-        {id: 'LwLh6ax0_1U', title: 'How The Economic Machine Works'},
-        {id: 'JMUxmLyrhSk', title: 'Macroeconomics vs Microeconomics'}
-    ],
-    'Psychology': [
-        {id: 'vo4pMVb0R6M', title: 'Introduction to Psychology'},
-        {id: 'hFV71QPvX2I', title: 'The Psychology of Learning'},
-        {id: 'aircAruvnKk', title: 'Freud\'s Psychoanalytic Theory'}
-    ],
-    'Art': [
-        {id: 'qv8TANh8djI', title: 'Art History 101'},
-        {id: 'JMUxmLyrhSk', title: 'How to Read a Painting'},
-        {id: 'Y3t2EivwrZ0', title: 'The Renaissance Explained'}
-    ],
-    'Music': [
-        {id: 'bMknfKXIFA8', title: 'Music Theory in 30 Minutes'},
-        {id: 'S4IVlptk1xI', title: 'History of Classical Music'},
-        {id: 'JMUxmLyrhSk', title: 'How to Read Sheet Music'}
-    ],
-    'Data Science': [
-        {id: 'X3paOmcrTjQ', title: 'Data Science for Beginners'},
-        {id: 'aircAruvnKk', title: 'Python for Data Science'},
-        {id: 'JMUxmLyrhSk', title: 'Machine Learning vs Data Science'}
-    ],
-    'Cybersecurity': [
-        {id: 'inWWhr5tnEA', title: 'Cyber Security In 7 Minutes'},
-        {id: 'bMknfKXIFA8', title: 'Ethical Hacking Course'},
-        {id: 'JMUxmLyrhSk', title: 'What is Phishing?'}
-    ],
-    'Astronomy': [
-        {id: 'libKVRa01L8', title: 'Solar System 101'},
-        {id: 'T84d6Zz5vO0', title: 'The Big Bang Theory'},
-        {id: 'bHIhgxav9LY', title: 'Black Holes Explained'}
-    ],
-    'Geography': [
-        {id: 'K6DSMZ8b3LE', title: 'Geography Now!'},
-        {id: 'JMUxmLyrhSk', title: 'World Map Explained'},
-        {id: 'T84d6Zz5vO0', title: 'Plate Tectonics'}
-    ],
-    'Law': [
-        {id: 'Y3t2EivwrZ0', title: 'Introduction to Law'},
-        {id: 'S4IVlptk1xI', title: 'How the Court System Works'},
-        {id: 'JMUxmLyrhSk', title: 'Constitutional Law'}
-    ],
-    'Medicine': [
-        {id: '8IlzKri08kk', title: 'Anatomy of the Human Body'},
-        {id: 'hS23_9yBfQ', title: 'How the Heart Works'},
-        {id: 'JMUxmLyrhSk', title: 'Medical Terminology'}
-    ],
-    'Philosophy': [
-        {id: '1A_CAkYt3GY', title: 'What is Philosophy?'},
-        {id: 'aircAruvnKk', title: 'Plato\'s Allegory of the Cave'},
-        {id: 'JMUxmLyrhSk', title: 'Stoicism 101'}
-    ],
-    'Business': [
-        {id: '3ez10ADR_gM', title: 'Business Basics'},
-        {id: 'JMUxmLyrhSk', title: 'Marketing Strategies'},
-        {id: 'bMknfKXIFA8', title: 'Entrepreneurship 101'}
-    ],
-    'Sociology': [
-        {id: 'LK5J0-cM-HE', title: 'Sociology - Crash Course'},
-        {id: 'Y3t2EivwrZ0', title: 'Social Structures'},
-        {id: 'JMUxmLyrhSk', title: 'Culture and Society'}
-    ]
-};
-
-const topics = Object.keys(youtubeDB);
-let userPreferences = JSON.parse(localStorage.getItem('ses_prefs')) || ['AI', 'Web Dev'];
-const YOUTUBE_API_KEY = 'AIzaSyABBfdvrZuOZ2HWhPQlgZGPT_LfZV1JV9A'; // TODO: Insert your YouTube Data API Key here to enable real video search
-let favorites = JSON.parse(localStorage.getItem('ses_favs')) || [];
-let assignments = JSON.parse(localStorage.getItem('ses_assign')) || [];
-
-/* --- 2. INITIALIZATION --- */
-window.onload = () => {
-    initTheme();
-    initModal();
-    renderDashboard();
-    updateFavBadge();
-    renderAssignments();
-};
-
-function switchView(view) {
-    // Hide all views (added profile)
-    ['dash', 'search', 'favorites', 'admin', 'profile'].forEach(id => {
-        const el = document.getElementById('view-' + id);
-        if(el) el.classList.add('hidden');
-    });
-    
-    // Show selected
-    const target = document.getElementById('view-' + view);
-    if(target) target.classList.remove('hidden');
-    
-    // Update nav active state
-    const btns = document.querySelectorAll('.nav-item');
-    btns.forEach(b => b.classList.remove('active'));
-    
-    const activeBtn = document.querySelector(`.nav-item[onclick*="'${view}'"]`);
-    if(activeBtn) activeBtn.classList.add('active');
-
-    if(view === 'favorites') renderFavorites();
-    if(view === 'admin') renderAdminPanel();
+/* --- VARIABLES & RESET --- */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --bg-body: #f1f5f9;       /* Light Mode Base */
+    --bg-card: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --accent: #f59e0b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
-
-/* --- 3. PREFERENCES SYSTEM --- */
-function initModal() {
-    const grid = document.getElementById('pref-choices');
-    grid.innerHTML = topics.map(t => 
-        `<div class="choice-tag ${userPreferences.includes(t) ? 'selected' : ''}" onclick="toggleTag(this, '${t}')">${t}</div>`
-    ).join('');
+/* Dark Mode Overrides */
+body.dark-mode {
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
 }
+body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); padding-bottom: 100px; }
+* { box-sizing: border-box; }
 
-function toggleTag(el, topic) {
-    el.classList.toggle('selected');
-}
+/* --- UTILS --- */
+.container { max-width: 1400px; margin: 0 auto; padding: 20px 40px; }
+.hidden { display: none !important; }
+.btn { padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-outline { background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
 
-function toggleModal(show) {
-    const modal = document.getElementById('pref-modal');
-    if(show) {
-        modal.classList.remove('hidden');
-        initModal(); // Reset UI to matches current state
-    } else {
-        modal.classList.add('hidden');
-    }
-}
+/* --- HEADER --- */
+header { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 0 40px; height: 70px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+.brand { font-size: 1.4rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; letter-spacing: -0.5px; }
 
-function savePreferences() {
-    const selected = Array.from(document.querySelectorAll('.choice-tag.selected')).map(el => el.innerText);
-    userPreferences = selected;
-    localStorage.setItem('ses_prefs', JSON.stringify(selected));
-    renderDashboard();
-    toggleModal(false);
-}
+.nav-links { display: flex; gap: 5px; }
+.nav-item { padding: 10px 20px; cursor: pointer; border-radius: 8px; font-weight: 600; color: var(--text-muted); transition: all 0.2s; font-size: 0.95rem; background: transparent; border: none; }
+.nav-item:hover { background: #eff6ff; color: var(--primary); }
+.nav-item.active { background: #eff6ff; color: var(--primary); }
 
-/* --- 4. DASHBOARD LOGIC --- */
-let dashboardRetryInterval = null;
+.user-profile { display: flex; align-items: center; gap: 12px; padding-left: 20px; border-left: 1px solid var(--border); cursor: pointer; }
+.user-profile:hover .avatar { transform: scale(1.1); }
+.avatar { width: 35px; height: 35px; background: linear-gradient(135deg, var(--primary), #60a5fa); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.85rem; transition: 0.2s; }
 
-async function renderDashboard() {
-    // Update Hero Tags
-    document.getElementById('user-prefs-display').innerHTML = userPreferences.map(p => 
-        `<span class="pref-tag"><i class="fa-solid fa-check"></i> ${p}</span>`
-    ).join('');
+/* --- HERO & DASHBOARD --- */
+.hero-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 40px; animation: slideDown 0.5s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-    const feed = document.getElementById('dashboard-feed');
+.hero-card { background: linear-gradient(120deg, var(--primary), #1d4ed8); border-radius: 16px; padding: 40px; color: white; position: relative; overflow: hidden; box-shadow: var(--shadow); }
+.hero-bg-icon { position: absolute; right: -20px; bottom: -30px; font-size: 10rem; opacity: 0.1; transform: rotate(-15deg); }
+.hero-title { font-size: 2rem; margin: 0 0 10px 0; font-weight: 800; }
+.hero-subtitle { font-size: 1.1rem; opacity: 0.9; max-width: 80%; line-height: 1.5; }
 
-    if(userPreferences.length === 0) {
-        feed.innerHTML = '';
-        feed.innerHTML = '<div style="text-align:center; padding:20px; color:#64748b;">No preferences set. Click gear icon to setup.</div>';
-        return;
-    }
+.hero-stats-row { display: flex; gap: 30px; margin-top: 30px; }
+.stat-item { background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 10px; backdrop-filter: blur(5px); }
+.stat-val { font-size: 1.5rem; font-weight: bold; display: block; }
+.stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
 
-    // ONLINE MODE (If API Key is set)
-    if (YOUTUBE_API_KEY) {
-        try {
-            // Check network status
-            if(!navigator.onLine) throw new Error("Offline");
+.quick-actions { background: var(--bg-card); border-radius: 16px; padding: 25px; border: 1px solid var(--border); box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center; }
+.action-btn { display: flex; align-items: center; gap: 15px; padding: 15px; margin-bottom: 10px; background: #f8fafc; border-radius: 8px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+.action-btn:hover { border-color: var(--primary); background: #eff6ff; transform: translateX(5px); }
+.action-icon { width: 40px; height: 40px; background: #dbeafe; color: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
-            const promises = userPreferences.map(async topic => {
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=${encodeURIComponent(topic + ' education')}&type=video&videoDuration=medium&key=${YOUTUBE_API_KEY}`);
-                if(!res.ok) throw new Error("API Error");
-                return { topic, data: await res.json() };
-            });
+.pref-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; }
+.pref-tag { background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
 
-            const results = await Promise.all(promises);
+/* --- SEARCH SECTION --- */
+.search-wrapper { position: relative; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto; }
+.search-input { width: 100%; padding: 20px; padding-left: 50px; border-radius: 50px; border: 2px solid var(--border); background: var(--bg-card); color: var(--text-main); font-size: 1.1rem; box-shadow: var(--shadow); outline: none; transition:0.3s; }
+.search-input:focus { border-color: var(--primary); }
+.search-icon { position: absolute; left: 20px; top: 22px; color: var(--text-muted); font-size: 1.2rem; }
+.search-btn { position: absolute; right: 10px; top: 10px; padding: 10px 30px; border-radius: 40px; }
 
-            // Success: Clear retry interval
-            if(dashboardRetryInterval) {
-                clearInterval(dashboardRetryInterval);
-                dashboardRetryInterval = null;
-            }
+/* --- ROWS & CARDS --- */
+.row-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin: 30px 0 20px 0; display: flex; align-items: center; gap: 10px; }
+.scroll-row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 20px; scroll-behavior: smooth; }
+.scroll-row::-webkit-scrollbar { height: 8px; }
+.scroll-row::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
-            feed.innerHTML = '';
-            results.forEach(({topic, data}) => {
-                const items = data.items || [];
-                if(items.length === 0) return;
-                const videos = items.map(item => ({ id: item.id.videoId, title: item.snippet.title, thumb: item.snippet.thumbnails.high.url }));
-                feed.innerHTML += `<div class="row-title">${topic} Recommended</div><div class="scroll-row">${videos.map(v => createVideoCard(v)).join('')}</div>`;
-            });
-            return;
+/* Resource Card */
+.resource-card { min-width: 300px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; position: relative; }
+.resource-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15); border-color: var(--primary); }
 
-        } catch(e) {
-            console.warn("Dashboard Fetch Error:", e);
-            feed.innerHTML = `<div style="text-align:center; padding:50px; color:var(--text-muted);"><i class="fa-solid fa-wifi" style="font-size:3rem; margin-bottom:20px; color:var(--danger);"></i><h3>Connection Issue</h3><p>Unable to reach YouTube servers.</p><div style="margin-top:20px; color:var(--primary); font-weight:600;"><i class="fa-solid fa-circle-notch fa-spin"></i> Retrying in 2.5s...</div></div>`;
-            if(!dashboardRetryInterval) dashboardRetryInterval = setInterval(renderDashboard, 2500);
-            return;
-        }
-    }
+.card-img { height: 160px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; cursor: pointer; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+.card-img:hover img { transform: scale(1.05); }
+.play-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); display:flex; justify-content:center; align-items:center; opacity:0; transition:0.2s; }
+.card-img:hover .play-overlay { opacity: 1; }
+.play-overlay i { color: white; font-size: 3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
 
-    // MOCK FALLBACK (Only if no API Key)
-    feed.innerHTML = '';
-    userPreferences.forEach(topic => {
-        const videos = youtubeDB[topic] || [];
-        if(videos.length === 0) return;
+.card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.card-badge { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 10; }
+.badge-video { color: #d97706; border-left: 3px solid #d97706; }
 
-        const html = `
-            <div class="row-title">${topic} Recommended</div>
-            <div class="scroll-row">
-                ${videos.map(v => createVideoCard(v)).join('')}
-            </div>
-        `;
-        feed.innerHTML += html;
-    });
-}
+.card-title { font-size: 1rem; font-weight: 700; margin: 0 0 8px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+.card-title:hover { color: var(--primary); }
 
-function createVideoCard(video) {
-    const isFav = favorites.some(f => f.id === video.id);
-    const safeTitle = video.title.replace(/'/g, "&apos;").replace(/"/g, "&quot;");
-    const thumb = video.thumb || `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+.card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 15px; border-top: 1px solid #f1f5f9; }
+.btn-action { font-size: 0.8rem; font-weight: 600; color: var(--primary); text-decoration: none; cursor: pointer; }
+.btn-fav { background: none; border: none; font-size: 1.2rem; color: #cbd5e1; cursor: pointer; transition: 0.2s; }
+.btn-fav:hover, .btn-fav.active { color: #ef4444; transform: scale(1.1); }
 
-    return `
-        <div class="resource-card">
-            <div class="card-img" onclick="openVideoPlayer('${video.id}')">
-                <span class="card-badge badge-video">Video</span>
-                <img src="${thumb}" alt="${safeTitle}">
-                <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
-            </div>
-            <div class="card-body">
-                <h3 class="card-title" onclick="openVideoPlayer('${video.id}')">${video.title}</h3>
-                <div class="card-actions">
-                    <span class="btn-action" onclick="openVideoPlayer('${video.id}')">WATCH <i class="fa-solid fa-arrow-right"></i></span>
-                    <button class="btn-fav ${isFav ? 'active' : ''}" data-id="${video.id}" onclick="toggleFav('${video.id}', '${safeTitle}', '${thumb}')">
-                        <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-}
+/* File Card */
+.file-card { min-width: 220px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; transition: 0.2s; position: relative; }
+.file-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
+.file-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.file-type { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.file-action { margin-top: 15px; width: 100%; font-size: 0.9rem; }
+.pdf-icon { color: #ef4444; } .ppt-icon { color: #f97316; } .doc-icon { color: #3b82f6; }
 
-/* --- 5. ROBUST SEARCH ENGINE --- */
-async function performGlobalSearch(overrideQuery = null) {
-    const query = overrideQuery || document.getElementById('global-search').value;
-    if(!query) return;
+/* --- PREFERENCES MODAL --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+.modal { background: var(--bg-card); padding: 30px; border-radius: 16px; width: 500px; max-width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.tag-grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; color: var(--text-main); }
+.choice-tag { padding: 8px 16px; background: #f1f5f9; border-radius: 20px; cursor: pointer; transition: 0.2s; user-select: none; border: 1px solid var(--border); }
+.choice-tag.selected { background: var(--primary); color: white; }
 
-    // If triggered from chat, switch view
-    if(overrideQuery) {
-        switchView('search');
-        document.getElementById('global-search').value = query;
-    }
+/* Loader */
+.loader { text-align: center; padding: 40px; color: var(--primary); font-size: 2rem; }
 
-    // UI Reset
-    document.getElementById('search-loader').classList.remove('hidden');
-    document.getElementById('search-results').classList.add('hidden');
+/* --- CHATBOT --- */
+.chat-btn { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4); z-index: 1000; transition: 0.3s; }
+.chat-btn:hover { transform: scale(1.1); }
+.chat-window { position: fixed; bottom: 100px; right: 30px; width: 350px; height: 500px; background: var(--bg-card); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #334155; }
+.chat-header { background: var(--primary); padding: 15px; color: white; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg-body); }
+.chat-msg { max-width: 80%; padding: 10px 15px; border-radius: 12px; font-size: 0.9rem; line-height: 1.4; }
+.msg-bot { background: var(--border); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 2px; }
+.msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+.chat-input-area { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: var(--bg-card); }
+.chat-input { flex: 1; background: #0f172a; border: 1px solid #334155; padding: 10px; border-radius: 8px; color: white; outline: none; }
+.chat-send { background: var(--primary); border: none; color: white; width: 40px; border-radius: 8px; cursor: pointer; }
 
-    // 1. Generate File Discovery Cards (The "Google Dorking" Feature)
-    renderFileRow(query);
+/* --- VIDEO PLAYER MODAL --- */
+.video-modal-content { position: relative; width: 90%; max-width: 1000px; aspect-ratio: 16/9; background: black; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border-radius: 12px; overflow: hidden; }
+.video-modal-content iframe { width: 100%; height: 100%; border: none; }
+.close-video-btn { position: absolute; top: -40px; right: 0; color: white; font-size: 2rem; cursor: pointer; transition: 0.2s; }
+.close-video-btn:hover { color: var(--danger); }
 
-    // 2. Video Search (Real API or Mock)
-    let vidMatches = [];
-    
-    // Try Real API if key exists
-    if(YOUTUBE_API_KEY) {
-        try {
-            const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${YOUTUBE_API_KEY}`);
-            const data = await res.json();
-            if(data.items) {
-                vidMatches = data.items.map(item => ({
-                    id: item.id.videoId,
-                    title: item.snippet.title,
-                    isGeneric: false,
-                    thumb: item.snippet.thumbnails.high.url
-                }));
-            } else {
-                console.warn("YouTube API returned no items:", data);
-            }
-        } catch(e) { console.error("YouTube API Error:", e); }
-    }
+/* Grid for Favorites */
+.resource-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
 
-    // Fallback to Mock if no API results
-    if(vidMatches.length === 0) {
-        Object.values(youtubeDB).flat().forEach(v => {
-            if(v.title.toLowerCase().includes(query.toLowerCase())) vidMatches.push(v);
-        });
-        
-        if(vidMatches.length === 0) {
-            vidMatches.push({
-                id: '', 
-                title: `Search YouTube for "${query}"`, 
-                isGeneric: true
-            });
-        }
-    }
-    
-    renderVideoRow(vidMatches, query);
+/* Assignment Card */
+.assign-card { background: var(--bg-card); border-left: 4px solid var(--accent); padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+.assign-card:hover { transform: translateX(5px); }
+.assign-date { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
 
-    // 3. Real Google Books Fetch
-    try {
-        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=6`);
-        const data = await res.json();
-        renderBookRow(data.items || []);
-    } catch(e) { console.log(e); }
-
-    document.getElementById('search-loader').classList.add('hidden');
-    document.getElementById('search-results').classList.remove('hidden');
-}
-
-/* --- 6. RENDERERS --- */
-
-// A. File Discovery (Smart Google Dorks)
-function renderFileRow(query) {
-    const container = document.getElementById('file-row');
-    const types = [
-        { ext: 'pdf', icon: 'fa-regular fa-file-pdf pdf-icon', label: 'PDF Document' },
-        { ext: 'ppt', icon: 'fa-regular fa-file-powerpoint ppt-icon', label: 'Presentation' },
-        { ext: 'doc', icon: 'fa-regular fa-file-word doc-icon', label: 'Word Doc' },
-        { ext: 'epub', icon: 'fa-solid fa-book-open', label: 'Ebook File' }
-    ];
-
-    container.innerHTML = types.map(t => `
-        <div class="file-card">
-            <i class="${t.icon} file-icon"></i>
-            <div class="file-type">${t.label}</div>
-            <div style="font-size:0.9rem; margin:5px 0; font-weight:600;">"${query}"</div>
-            <button class="btn btn-outline file-action" onclick="openDork('${t.ext}', '${query}')">
-                Find ${t.ext.toUpperCase()}s <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </button>
-        </div>
-    `).join('') + `
-        <div class="file-card" style="border-color: #38bdf8;">
-            <i class="fa-solid fa-book file-icon" style="color:#38bdf8"></i>
-            <div class="file-type">OceanofPDF</div>
-            <div style="font-size:0.9rem; margin:5px 0; font-weight:600;">"${query}"</div>
-            <button class="btn btn-outline file-action" onclick="window.open('https://oceanofpdf.com/?s=${encodeURIComponent(query)}', '_blank')">
-                Search Site <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </button>
-        </div>
-    `;
-}
-
-function openDork(type, query) {
-    // The Magic Google Query - Enhanced for Study Material
-    let dork = `filetype:${type}`;
-    if(['pdf', 'ppt', 'doc'].includes(type)) {
-        dork += ` (site:edu OR site:org)`; // Target academic sources
-    }
-    const url = `https://www.google.com/search?q=${encodeURIComponent(query)}+${dork}`;
-    window.open(url, '_blank');
-}
-
-// B. Video Row
-function renderVideoRow(videos, query) {
-    const container = document.getElementById('video-row');
-    container.innerHTML = videos.map(v => {
-        if(v.isGeneric) {
-            // Fallback if no local match
-            return `
-            <div class="resource-card" style="display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; min-width:300px;" onclick="window.open('https://www.youtube.com/results?search_query=${query}', '_blank')">
-                <div>
-                    <i class="fa-brands fa-youtube" style="font-size:3rem; color:red;"></i>
-                    <h3>Browse YouTube</h3>
-                    <p>Click to search YouTube directly for "${query}"</p>
-                </div>
-            </div>`;
-        }
-        return createVideoCard(v);
-    }).join('');
-}
-
-// C. Book Row
-function renderBookRow(books) {
-    const container = document.getElementById('book-row');
-    container.innerHTML = books.map(b => {
-        const info = b.volumeInfo;
-        const img = info.imageLinks ? info.imageLinks.thumbnail : 'https://via.placeholder.com/128x190?text=No+Cover';
-        return `
-            <div class="resource-card" style="width:200px; min-width:200px;" onclick="window.open('${info.previewLink}', '_blank')">
-                <div class="card-img" style="height:250px;">
-                    <img src="${img}" style="object-fit:cover;">
-                </div>
-                <div class="card-body">
-                    <h3 class="card-title">${info.title}</h3>
-                    <div style="font-size:0.75rem; color:#64748b;">${info.authors ? info.authors[0] : 'Unknown'}</div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-/* --- 7. CHATBOT LOGIC --- */
-function toggleChat() {
-    document.getElementById('chat-window').classList.toggle('hidden');
-}
-
-function sendChat() {
-    const input = document.getElementById('chat-input');
-    const msg = input.value.trim();
-    if(!msg) return;
-
-    addMsg(msg, 'user');
-    input.value = '';
-
-    // Show typing indicator
-    const container = document.getElementById('chat-messages');
-    const typingId = 'typing-' + Date.now();
-    const typingDiv = document.createElement('div');
-    typingDiv.className = 'chat-msg msg-bot';
-    typingDiv.id = typingId;
-    typingDiv.innerHTML = '<i class="fa-solid fa-ellipsis fa-fade"></i>';
-    container.appendChild(typingDiv);
-    container.scrollTop = container.scrollHeight;
-
-    // Process Response
-    setTimeout(() => {
-        const typingEl = document.getElementById(typingId);
-        if(typingEl) typingEl.remove();
-
-        const response = generateBotResponse(msg);
-        addMsg(response.text, 'bot');
-        
-        if(response.action) {
-            response.action();
-        }
-    }, 800);
-}
-
-function generateBotResponse(msg) {
-    const lower = msg.toLowerCase();
-    
-    // 1. GREETINGS
-    if (/^(hi|hello|hey|greetings)/.test(lower)) {
-        return { text: "Hello! I'm your academic assistant. I can help you find resources, manage your favorites, or navigate the app. What are you studying today?" };
-    }
-
-    // 2. NAVIGATION & SYSTEM COMMANDS
-    if (lower.includes('favorite') || lower.includes('saved')) {
-        return { 
-            text: "I've opened your favorites folder. You can see all your saved videos and books here.",
-            action: () => switchView('favorites')
-        };
-    }
-    if (lower.includes('dashboard') || lower.includes('home')) {
-        return { 
-            text: "Heading back to the dashboard!",
-            action: () => switchView('dash')
-        };
-    }
-    if (lower.includes('admin')) {
-        return { 
-            text: "Opening the Admin Console.",
-            action: () => switchView('admin')
-        };
-    }
-
-    // 3. SPECIFIC SEARCH INTENTS
-    // Matches: "find videos about X", "search for X", "show me X"
-    const searchMatch = lower.match(/(?:search|find|show me|about|on)\s+(?:videos?|books?|resources?|documents?)?\s*(?:about|for|on)?\s*(.+)/i);
-    
-    if (searchMatch || lower.startsWith('search ')) {
-        let topic = searchMatch ? searchMatch[1] : lower.replace('search', '').trim();
-        // Clean punctuation
-        topic = topic.replace(/[?.!]$/, '');
-
-        if(topic.length < 2) return { text: "Could you be more specific? What topic are you looking for?" };
-
-        return {
-            text: `Searching our database and the web for "<b>${topic}</b>"...`,
-            action: () => performGlobalSearch(topic)
-        };
-    }
-
-    // 4. DATABASE KNOWLEDGE (Meta-queries)
-    if (lower.includes('what topics') || lower.includes('what can you') || lower.includes('list')) {
-        const available = Object.keys(youtubeDB).slice(0, 5).join(', ');
-        return { text: `I can search for anything, but I have curated collections for: ${available}, and more. Try "Search Physics".` };
-    }
-
-    // 5. SMALL TALK / FALLBACK
-    if (lower.includes('thank')) return { text: "You're welcome! Happy studying." };
-    if (lower.includes('who are you')) return { text: "I am SES v3.0, a simulated AI designed to assist with student inquiries." };
-
-    // Default
-    return { text: "I didn't quite catch that. Try asking me to 'Search for [topic]' or 'Show favorites'." };
-}
-
-function addMsg(text, sender) {
-    const container = document.getElementById('chat-messages');
-    const div = document.createElement('div');
-    div.className = `chat-msg msg-${sender}`;
-    div.innerHTML = text;
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
-}
-
-/* --- 8. VIDEO PLAYER LOGIC --- */
-function openVideoPlayer(id) {
-    document.getElementById('video-player-modal').classList.remove('hidden');
-    document.getElementById('yt-player-frame').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-}
-function closeVideoPlayer() {
-    document.getElementById('video-player-modal').classList.add('hidden');
-    document.getElementById('yt-player-frame').src = '';
-}
-
-/* --- 9. FAVORITES LOGIC --- */
-function toggleFav(id, title, thumb) {
-    const index = favorites.findIndex(f => f.id === id);
-    if (index > -1) {
-        favorites.splice(index, 1);
-    } else {
-        favorites.push({ id, title, thumb, type: 'Video', date: new Date().toISOString() });
-    }
-    localStorage.setItem('ses_favs', JSON.stringify(favorites));
-    
-    updateFavBadge();
-
-    // Update UI buttons immediately
-    const btns = document.querySelectorAll(`.btn-fav[data-id="${id}"]`);
-    btns.forEach(btn => {
-        btn.classList.toggle('active');
-        const icon = btn.querySelector('i');
-        if(btn.classList.contains('active')) {
-            icon.classList.remove('fa-regular');
-            icon.classList.add('fa-solid');
-        } else {
-            icon.classList.remove('fa-solid');
-            icon.classList.add('fa-regular');
-        }
-    });
-
-    // Refresh grid if we are on favorites view
-    const favView = document.getElementById('view-favorites');
-    if(favView && !favView.classList.contains('hidden')) {
-        renderFavorites();
-    }
-}
-
-function updateFavBadge() {
-    const badge = document.getElementById('fav-badge');
-    if(badge) badge.innerText = favorites.length;
-}
-
-function renderFavorites() {
-    const grid = document.getElementById('fav-grid');
-    if(!grid) return;
-    
-    if(favorites.length === 0) {
-        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px; color:#64748b;">No favorites saved yet. Search for videos to add them here!</div>';
-        return;
-    }
-    
-    grid.innerHTML = favorites.map(v => createVideoCard(v)).join('');
-}
-
-/* --- 10. THEME & ASSIGNMENTS & ADMIN --- */
-
-// Theme Logic
-function initTheme() {
-    const theme = localStorage.getItem('ses_theme');
-    if(theme === 'dark') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('theme-icon').className = 'fa-solid fa-sun';
-    }
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('ses_theme', isDark ? 'dark' : 'light');
-    document.getElementById('theme-icon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-}
-
-// Assignment Logic
-function toggleAssignModal(show) {
-    const modal = document.getElementById('assign-modal');
-    if(show) modal.classList.remove('hidden');
-    else modal.classList.add('hidden');
-}
-
-function saveAssignment() {
-    const title = document.getElementById('assign-title').value;
-    const date = document.getElementById('assign-date').value;
-    
-    if(title && date) {
-        assignments.push({ title, date, id: Date.now() });
-        // Sort by date
-        assignments.sort((a,b) => new Date(a.date) - new Date(b.date));
-        localStorage.setItem('ses_assign', JSON.stringify(assignments));
-        
-        renderAssignments();
-        toggleAssignModal(false);
-        document.getElementById('assign-title').value = '';
-        document.getElementById('assign-date').value = '';
-    }
-}
-
-function renderAssignments() {
-    const container = document.getElementById('dashboard-assignments');
-    if(!container) return;
-
-    if(assignments.length === 0) {
-        container.innerHTML = '<div style="font-size:0.8rem; color:var(--text-muted); font-style:italic;">No pending assignments.</div>';
-        return;
-    }
-
-    // Show top 3
-    container.innerHTML = assignments.slice(0, 3).map(a => `
-        <div class="assign-card">
-            <div style="font-weight:600; font-size:0.9rem;">${a.title}</div>
-            <div class="assign-date">${new Date(a.date).toLocaleDateString()}</div>
-            <i class="fa-solid fa-check" style="color:var(--success); cursor:pointer; margin-left:10px;" onclick="completeAssignment(${a.id})"></i>
-        </div>
-    `).join('');
-}
-
-function completeAssignment(id) {
-    assignments = assignments.filter(a => a.id !== id);
-    localStorage.setItem('ses_assign', JSON.stringify(assignments));
-    renderAssignments();
-}
-
-// Admin Logic (Mock)
-function renderAdminPanel() {
-    const tbody = document.getElementById('admin-uploads-list');
-    // Mock Data
-    const uploads = [
-        { name: 'Notes_Physics_Ch1.pdf', type: 'PDF', user: 'John Doe', date: '2023-10-25' },
-        { name: 'React_Project_Final.zip', type: 'ZIP', user: 'Jane Smith', date: '2023-10-26' },
-        { name: 'History_Essay_Draft.docx', type: 'DOC', user: 'Mike Ross', date: '2023-10-27' }
-    ];
-
-    tbody.innerHTML = uploads.map(u => `
-        <tr>
-            <td><i class="fa-regular fa-file"></i> ${u.name}</td>
-            <td><span style="background:#eff6ff; color:var(--primary); padding:2px 8px; border-radius:4px; font-size:0.75rem; font-weight:bold;">${u.type}</span></td>
-            <td>${u.user}</td>
-            <td>${u.date}</td>
-            <td>
-                <button class="btn-outline" style="padding:5px 10px; color:var(--success); border-color:var(--success);" onclick="this.closest('tr').remove()"><i class="fa-solid fa-check"></i></button>
-                <button class="btn-outline" style="padding:5px 10px; color:var(--danger); border-color:var(--danger);" onclick="this.closest('tr').remove()"><i class="fa-solid fa-xmark"></i></button>
-            </td>
-        </tr>
-    `).join('');
-}
+/* Admin Table */
+.admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-card); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.admin-table th, .admin-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-main); }
+.admin-table th { background: rgba(37, 99, 235, 0.1); color: var(--primary); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; }
+.admin-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-top: 30px; }
