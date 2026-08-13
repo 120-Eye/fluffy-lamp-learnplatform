@@ -82,7 +82,7 @@
             <button class="nav-item active" onclick="switchView('dash')">Dashboard</button>
             <button class="nav-item" onclick="switchView('search')">Search</button>
             <button class="nav-item" onclick="switchView('favorites')">Favorites <span id="fav-badge" style="background:var(--accent); color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:5px;">0</span></button>
-            <button class="nav-item" onclick="switchView('admin')">Admin</button>
+           
         </nav>
         <div style="display:flex; align-items:center; gap:15px;">
             <button class="btn-outline" style="border:none; font-size:1.2rem;" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
@@ -208,10 +208,16 @@
         <div id="view-profile" class="hidden">
             <div class="hero-card" style="background: linear-gradient(120deg, #6366f1, #4338ca);">
                 <div style="display:flex; align-items:center; gap:20px;">
-                    <div style="width:80px; height:80px; background:white; border-radius:50%; color:var(--primary); display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:bold;">SU</div>
+                    <div style="width:80px; height:80px; background:white; border-radius:50%; 
+                        display:flex; align-items:center; justify-content:center;">
+                          <img src="https://commons.wikimedia.org/wiki/File:Eye-Brown.svg" 
+                           alt="User Logo" 
+                           style="width:60%; height:60%;">
+                    </div>
+
                     <div>
-                        <h1 style="margin:0; font-size:2rem;">Student User</h1>
-                        <p style="margin:5px 0 0 0; opacity:0.9;">Computer Science • Semester 7</p>
+                        <h1 style="margin:0; font-size:2rem;">User</h1>
+                        <p style="margin:5px 0 0 0; opacity:0.9;">Keep Learning • No Limits</p>
                     </div>
                 </div>
             </div>
@@ -231,11 +237,7 @@
 
     </div>
 
-    <!-- Chatbot Widget -->
-    <div class="chat-btn" onclick="toggleChat()">
-        <i class="fa-solid fa-robot"></i>
-    </div>
-
+    
     <div id="chat-window" class="chat-window hidden">
         <div class="chat-header">
             <span><i class="fa-solid fa-robot"></i> Study Buddy</span>
